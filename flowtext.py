@@ -1,6 +1,10 @@
 class FormatText:
     """Use this object to perform flow operations on text
-    based upon RFC2646."""
+    based upon RFC2646. The unwrap routines will take text
+    formatted in RFC2646 and give back unformatted lines, perfect
+    for a text control in a GUI which does its own wrapping,
+    but as it can wrap, and insert quote '>' and ' ' characters
+    where necessary, it is very good for formatting text for viewing."""
     
     def __init__(self, maxwidth = 66):
         """The parameter maxwidth specifies the maximum width 

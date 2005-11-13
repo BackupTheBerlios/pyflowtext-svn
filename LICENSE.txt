@@ -1,0 +1,68 @@
+A. ORIGIN OF THIS LICENSE
+=========================
+This license is based almost completely on the Python License (for 
+Python 2.3) created by the Python Software Foundation. 
+Being derived from this, the license is compatible with the GPL.
+Note:
+
+(1) GPL-compatible doesn't mean that we're distributing this software
+    under the GPL.  All Python licenses, unlike the GPL, let you 
+    distribute a modified version without making your changes open 
+    source.  This GPL-compatible license makes it possible to combine 
+    this software with other software that is released under the GPL.
+
+The end goal of this license is to allow the system to be distributed
+as part of the PSF's python distribution.
+
+B. TERMS AND CONDITIONS FOR ACCESSING OR OTHERWISE USING THIS SOFTWARE
+======================================================================
+
+PSF LICENSE AGREEMENT FOR PYTHON 2.3
+------------------------------------
+
+1. This LICENSE AGREEMENT is between OrionRobots.co.uk ("ORU"), and the 
+Individual or Organization ("Licensee") accessing and otherwise 
+using this software in source or binary form and its associated 
+documentation. "This Software" or "The Software" refers to the distributed
+material in all forms that is accompanied by this license.
+
+2. Subject to the terms and conditions of this License Agreement, ORU
+hereby grants Licensee a nonexclusive, royalty-free, world-wide
+license to reproduce, analyze, test, perform and/or display publicly,
+prepare derivative works, distribute, and otherwise use it
+alone or in any derivative version, provided, however, that ORU's
+License Agreement and ORU's notice of copyright, i.e., "Copyright (c)
+2005 OrionRobots.co.uk; All Rights Reserved" are retained alone or in 
+any derivative version prepared by Licensee.
+
+3. In the event Licensee prepares a derivative work that is based on
+or incorporates this software or any part thereof, and wants to make
+the derivative work available to others as provided herein, then
+Licensee hereby agrees to include in any such work a brief summary of
+the changes made to the software.
+
+4. ORU is making this software available to Licensee on an "AS IS"
+basis.  ORU MAKES NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR
+IMPLIED.  BY WAY OF EXAMPLE, BUT NOT LIMITATION, ORU MAKES NO AND
+DISCLAIMS ANY REPRESENTATION OR WARRANTY OF MERCHANTABILITY OR FITNESS
+FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF THIS SOFTWARE WILL NOT
+INFRINGE ANY THIRD PARTY RIGHTS.
+
+5. ORU SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF THE 
+SOFTWARE FOR ANY INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR LOSS AS
+A RESULT OF MODIFYING, DISTRIBUTING, OR OTHERWISE USING THIS SOFTWARE,
+OR ANY DERIVATIVE THEREOF, EVEN IF ADVISED OF THE POSSIBILITY THEREOF.
+
+6. This License Agreement will automatically terminate upon a material
+breach of its terms and conditions.
+
+7. Nothing in this License Agreement shall be deemed to create any
+relationship of agency, partnership, or joint venture between ORU and
+Licensee.  This License Agreement does not grant permission to use ORU
+trademarks or trade name in a trademark sense to endorse or promote
+products or services of Licensee, or any third party.
+
+8. By copying, installing or otherwise using the software, Licensee
+agrees to be bound by the terms and conditions of this License
+Agreement.
+

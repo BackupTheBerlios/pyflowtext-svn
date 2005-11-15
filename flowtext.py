@@ -14,7 +14,9 @@ class FormatText:
         RFC 2646 that 66 character lines are most readable"""
         self.setMaxWidth( maxwidth )
         #Set a useful item
-        self.softnewlines = " (?:[\r\n]{1,2})(?![\r\n]{1,2})"
+        self.newline = "(?:(?:\r\n)|(?:\n\r)|(?:\n)|(?:\r))"        
+        self.softnewlines = " " + self.newline + "(?![\r\n])"
+        #self.softnewlines = " (?:[\r\n]{1,2})(?![\r\n]{1,2})"
     
     def getMaxWidth( self ):
         return self.maxwidth
@@ -43,22 +45,59 @@ class FormatText:
     def unwrapquoted( self, text ):
         """This will unwrap the text, dealing specifically with quoted stuff
         and try to keep paragraphs together"""
+        
+        #TODO: Convert to a callable class
+        class quotedpatternmatcher:
+            def __init__( self ):
+                self.quotelevel = None
+                
+            def __call__( self, matchobj ):
+                #if we have a quote, and not after a soft new line(wrap)
+                if matchobj.group( "quotenotsoft" ):
+                    print "\nNotSoft Discarding quotelevel object"                    
+                    #then set quotelevel to the new quote
+                    self.quotelevel = matchobj.group( "quotenotsoft" )                
+                    #and return (with out changing anything)
+                    return matchobj.group( 0 )
+                
+                #if we have a quote pattern (after a soft break)
+                if matchobj.group( "quote" ):
+                    # If we have a previously stored quote level
+                    #  and this one doesnt match
+                    if ( self.quotelevel != matchobj.group( "quote" ) ):
+                        #   reset the quote level to the new one
+                        print "\nReplacing the quotelevel object"
+                        self.quotelevel = matchobj.group( "quote" )
+                        #   dont continue the line (less soft break)
+                        return "\n" + matchobj.group( "quote" )
+                        #Reset the quote level
+                else:
+                    print "\nSoft Discarding quotelevel object"
+                    self.quotelevel = None
+                    # join the line by returning a single space (removing the softbreak and quote)
+                return " "
+
         #quotematch = "(?:(?:[> ]+)|(?:From ))"
         quotematch = "(?:[> ]+)"
-        expression = "^(?P<quote>" + quotematch + ")(?P<text>.*?)" + self.softnewlines
-        #Add the second line - repeated quote then text that is NOT 
-        #the quote - note we use (?!...) for negative lookahead
-        expression += "(?:(?P=quote))"
-        #?" + "(?!" + quotematch + ")"
-        replace = "\g<quote>\g<text> "
-        return re.sub( string = text, pattern=expression, repl= replace)
+        #A newline followed by a quotematch(or not)
+        expression = "(?:(?:"+ self.softnewlines + ")(?P<quote>" + quotematch + ")?"
+        #or a quotematch at the start of a line
+        expression += "|^(?P<quotenotsoft>" + quotematch + "))"
+        #expression += "|(?:(?! )" + self.newline + "(?P<quotenotsoft>" + quotematch + ")))"
+        #either followed by something that is NOT a quotematch
+        expression += "(?!" + quotematch + ")"
+        #Decision has been to go with complex pattern matcher
+        replace = quotedpatternmatcher()
+        return re.sub( string = text, pattern=expression, repl=replace )
+    
+        
 
         
     def unwrap( self, text ):
         """This will unwrap the text and try to keep paragraphs together"""
         expression = self.softnewlines
         replace = " "
-        return re.sub( string = text, pattern=expression, repl= replace)
+        return re.sub( string = text, pattern=expression, repl= replace )
 
     
 #    def unwrap(self, text):

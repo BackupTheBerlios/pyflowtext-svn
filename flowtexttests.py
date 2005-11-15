@@ -20,7 +20,7 @@ class ReflowTestCase( unittest.TestCase ):
             flow.setMaxWidth( 99 )
         self.assertRaises( ValueError, setOverWide )
         
-    def testUnwrap( self ):
+    def testBasicNormalUnwrap( self ):
         flow = flowtext.FormatText()
         testText = ( "This line spans a few \n" +
             "lines and has a couple of soft \n" +
@@ -28,14 +28,34 @@ class ReflowTestCase( unittest.TestCase ):
         expectedText = ( "This line spans a few " + 
             "lines and has a couple of soft " +
             "breaks in it. " )
-        self.assertEqual( expectedText, flow.unwrap( testText ) )
+        debug = False
+        if(debug):
+            print "\n---------------------------\ninput text\n"
+            print testText
+        outputText = flow.unwrapquoted( testText, debug ) 
+        if(debug):
+            print "\n---------------------------\nExpected text\n"
+            print expectedText
+            print "\n---------------------------\noutput text\n"
+            print outputText
+
+        self.assertEqual( expectedText, outputText )    
 
     def testNegativeUnwrap( self ):
         flow = flowtext.FormatText()
         testText = ( "This line spans a few \n" +
             "lines and has a couple of soft \n" +
             "breaks in it. " )
-        self.assertNotEqual( testText, flow.unwrap( testText ) )    
+        debug = False
+        if(debug):
+            print "\n---------------------------\ninput text\n"
+            print testText
+        outputText = flow.unwrapquoted( testText, debug ) 
+        if(debug):
+            print "\n---------------------------\noutput text\n"
+            print outputText
+
+        self.assertNotEqual( testText, outputText )    
     
     def testUnwrapTwoParagraphs( self ):
         flow = flowtext.FormatText()
@@ -79,8 +99,18 @@ class ReflowTestCase( unittest.TestCase ):
         flow = flowtext.FormatText()
         testText = ( ">This line is \n>quoted" )
         expectedText = ( ">This line is quoted" )
+        debug = True
+        if(debug):
+            print "\n---------------------------\ninput text\n"
+            print testText
+        outputText = flow.unwrapquoted( testText, debug ) 
+        if(debug):
+            print "\n---------------------------\nExpected text\n"
+            print expectedText
+            print "\n---------------------------\noutput text\n"
+            print outputText
 
-        self.assertEqual( expectedText, flow.unwrapquoted( testText ) )    
+        self.assertEqual( expectedText, outputText )    
 
     def testUnwrapMixedNormalAndQuoted( self ):
         flow = flowtext.FormatText()
@@ -173,13 +203,16 @@ class ReflowTestCase( unittest.TestCase ):
             ">This line is also " + 
             "quoted and has an " + 
             "example of embaressing wrap\n")
-        print "\n---------------------------\ninput text\n"
-        print testText
-        outputText = flow.unwrapquoted( testText, True ) 
-        print "\n---------------------------\nExpected text\n"
-        print expectedText
-        print "\n---------------------------\noutput text\n"
-        print outputText
+        debug = False
+        if(debug):
+            print "\n---------------------------\ninput text\n"
+            print testText
+        outputText = flow.unwrapquoted( testText, debug ) 
+        if(debug):
+            print "\n---------------------------\nExpected text\n"
+            print expectedText
+            print "\n---------------------------\noutput text\n"
+            print outputText
         self.assertEqual( expectedText, outputText )
     
     def testUnwrapAll( self ):

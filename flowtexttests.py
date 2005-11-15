@@ -97,7 +97,7 @@ class ReflowTestCase( unittest.TestCase ):
             
         self.assertEqual( expectedText, flow.unwrapquoted( testText ) )
 
-    def testUnwrapTwoQuotedLines( self ):
+    def testUnwrapTwoGTQuotedLines( self ):
         flow = flowtext.FormatText()
         testText = ( ">This line is \n" +
             ">quoted and has a couple of soft \n" +
@@ -109,22 +109,78 @@ class ReflowTestCase( unittest.TestCase ):
             "breaks in it.\n\n" +
             ">This line is also " + 
             "quoted" )
-    
-    
-    def testUnwrapMixedQuoted( self ):
+
+        self.assertEqual( expectedText, flow.unwrapquoted( testText ) )
+
+    def testUnwrapTwoSpaceQuotedLines( self ):
         flow = flowtext.FormatText()
-        testText = ( ">This line is \n" +
-            ">quoted and has a couple of soft \n" +
-            ">breaks in it.\n\n" +
+        testText = ( " This line is \n" +
+            " quoted and has a couple of soft \n" +
+            " breaks in it.\n\n" +
             " This line is also \n" + 
             " quoted" )
-        expectedText = ( ">This line is " +
+        expectedText = ( " This line is " +
             "quoted and has a couple of soft " +
             "breaks in it.\n\n" +
             " This line is also " + 
             "quoted" )
-
+    
         self.assertEqual( expectedText, flow.unwrapquoted( testText ) )
+        
+    def testUnwrapQuotedWithOnlySoftWrap(self):
+        flow = flowtext.FormatText()
+        testText = ( ">This line is \n" +
+            "quoted and has a couple of soft \n" +
+            "breaks in it.")
+        expectedText = ( ">This line is " +
+            "quoted and has a couple of soft " +
+            "breaks in it.")
+        self.assertEqual( expectedText, flow.unwrapquoted( testText ) )
+        
+    def testUnwrapQuotedWithSoftWrapAndQuoted(self):
+        flow = flowtext.FormatText()
+        testText = ( ">This line is \n" +
+            "quoted and has a couple of soft \n" +
+            ">breaks in it.")
+        expectedText = ( ">This line is " +
+            "quoted and has a couple of soft " +
+            "breaks in it.")
+        self.assertEqual( expectedText, flow.unwrapquoted( testText ) )
+        
+    def testStandardiseNewlines(self):
+        flow = flowtext.FormatText()
+        testText = ("This is a basic newline\n" + 
+                    "And another type\r" + 
+                    "And another\n\r" + 
+                    "And yet another\r\n")
+        expectedText = ("This is a basic newline\n" + 
+                    "And another type\n" + 
+                    "And another\n" + 
+                    "And yet another\n")
+        self.assertEqual( expectedText, flow.standardiseNewlines(testText))
+    
+    def testUnwrapMixedQuoted( self ):
+        flow = flowtext.FormatText()
+        testText = ( " This line is \n" +
+            " quoted and has a couple of soft \n" +
+            " breaks in it.\n\n" +
+            ">This line is also \n" + 
+            ">quoted and has an \n" + 
+            ">example of embaressing wrap\n")
+        expectedText = ( " This line is " +
+            "quoted and has a couple of soft " +
+            "breaks in it.\n\n" +
+            ">This line is also " + 
+            "quoted and has an " + 
+            "example of embaressing wrap\n")
+        print "\n---------------------------\ninput text\n"
+        print testText
+        outputText = flow.unwrapquoted( testText, True ) 
+        print "\n---------------------------\nExpected text\n"
+        print expectedText
+        print "\n---------------------------\noutput text\n"
+        print outputText
+        self.assertEqual( expectedText, outputText )
     
     def testUnwrapAll( self ):
         flow = flowtext.FormatText()

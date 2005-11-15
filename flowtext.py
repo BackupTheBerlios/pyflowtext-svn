@@ -14,9 +14,16 @@ class FormatText:
         RFC 2646 that 66 character lines are most readable"""
         self.setMaxWidth( maxwidth )
         #Set a useful item
-        self.newline = "(?:(?:\r\n)|(?:\n\r)|(?:\n)|(?:\r))"        
-        self.softnewlines = " " + self.newline + "(?![\r\n])"
+        self.newline = r"\n"
+        self.softnewlines = " " + self.newline + r"(?![\n])"
         #self.softnewlines = " (?:[\r\n]{1,2})(?![\r\n]{1,2})"
+        
+    def standardiseNewlines(self, text):
+        """This function turns ALL newlines into a simple \n sequence.
+        Thus simplifiying our job a little"""
+        anynewline = r"((?:\r\n)|(?:\n\r)|(?:\n)|(?:\r))"
+        replace = r"\n"
+        return re.sub(string = text, pattern=anynewline, repl=replace )
     
     def getMaxWidth( self ):
         return self.maxwidth
@@ -42,19 +49,24 @@ class FormatText:
         
         #Reflow each line
         
-    def unwrapquoted( self, text ):
+    def unwrapquoted( self, text, debug = False ):
         """This will unwrap the text, dealing specifically with quoted stuff
         and try to keep paragraphs together"""
-        
-        #TODO: Convert to a callable class
+        text = self.standardiseNewlines(text)
+
+        #This class offers a callable to be used in the callback for
+        #the regular expression replace
         class quotedpatternmatcher:
-            def __init__( self ):
+            def __init__( self, debug ):
                 self.quotelevel = None
+                self.debug = debug
                 
             def __call__( self, matchobj ):
                 #if we have a quote, and not after a soft new line(wrap)
                 if matchobj.group( "quotenotsoft" ):
-                    print "\nNotSoft Discarding quotelevel object"                    
+                    if(self.debug):
+                        print "\nNotsoft Replacing the quotelevel object '" , self.quotelevel, \
+                                "' with '" +  matchobj.group( "quotenotsoft" ) + "'"
                     #then set quotelevel to the new quote
                     self.quotelevel = matchobj.group( "quotenotsoft" )                
                     #and return (with out changing anything)
@@ -66,14 +78,21 @@ class FormatText:
                     #  and this one doesnt match
                     if ( self.quotelevel != matchobj.group( "quote" ) ):
                         #   reset the quote level to the new one
-                        print "\nReplacing the quotelevel object"
+                        if(self.debug):
+                            print "\nReplacing the quotelevel object '" + self.quotelevel + \
+                                "' with '" +  matchobj.group( "quote" ) + "'"
                         self.quotelevel = matchobj.group( "quote" )
                         #   dont continue the line (less soft break)
                         return "\n" + matchobj.group( "quote" )
-                        #Reset the quote level
-                else:
-                    print "\nSoft Discarding quotelevel object"
-                    self.quotelevel = None
+                    elif (self.debug):
+                        print "Keeping quote level, and unwrapping"
+                else:                    
+                    if(self.debug):
+                        print "\nSimple unwrap - removing soft break"
+                    pass;
+                    #if(self.debug):
+                    #    print "\nSoft Discarding quotelevel object"
+                    #self.quotelevel = None
                     # join the line by returning a single space (removing the softbreak and quote)
                 return " "
 
@@ -82,12 +101,11 @@ class FormatText:
         #A newline followed by a quotematch(or not)
         expression = "(?:(?:"+ self.softnewlines + ")(?P<quote>" + quotematch + ")?"
         #or a quotematch at the start of a line
-        expression += "|^(?P<quotenotsoft>" + quotematch + "))"
-        #expression += "|(?:(?! )" + self.newline + "(?P<quotenotsoft>" + quotematch + ")))"
+        expression += "|^(?P<quotenotsoft>" + quotematch + "))"        
         #either followed by something that is NOT a quotematch
         expression += "(?!" + quotematch + ")"
         #Decision has been to go with complex pattern matcher
-        replace = quotedpatternmatcher()
+        replace = quotedpatternmatcher(debug)
         return re.sub( string = text, pattern=expression, repl=replace )
     
         

@@ -60,9 +60,11 @@ class FormatText:
                 self.debug = debug
                 
             def __call__( self, matchobj ):
+                if self.debug:
+                    print matchobj.groups()
                 if not matchobj.group("softnewline"):
                     if self.debug:
-                        print "\nNonsoft newline";
+                        print "\nNonsoft newline"
                     #if we have a quote, and not after a soft new line(wrap)
                     if matchobj.group( "quote" ):
                         if(self.debug):
@@ -74,6 +76,8 @@ class FormatText:
                     return matchobj.group( 0 )
                 #We have got a soft newline
                 else:
+                    if self.debug:
+                        print "\nSoft newline matched";
                     #if we have a quote pattern (after a soft break)
                     if matchobj.group( "quote" ):
                         # If we have a previously stored quote level
@@ -102,7 +106,7 @@ class FormatText:
         #quotematch = "(?:(?:[> ]+)|(?:From ))"
         quotematch = "(?:[> ]+)"
         #here we must start with a softnewline match or the start of a line
-        expression = "(?:(?P<softnewline>"+ self.softnewlines + ")|^)"
+        expression = "(?:(?P<softnewline>"+ self.softnewlines + ")|(\n|^))"
         #Then we may (or may not) have a quotematch
         expression += "(?P<quote>" + quotematch + ")?"
         #either followed by something that is NOT a quotematch(making sure we dont get any more

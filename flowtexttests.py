@@ -99,7 +99,7 @@ class ReflowTestCase( unittest.TestCase ):
         flow = flowtext.FormatText()
         testText = ( ">This line is \n>quoted" )
         expectedText = ( ">This line is quoted" )
-        debug = True
+        debug = False
         if(debug):
             print "\n---------------------------\ninput text\n"
             print testText
@@ -243,7 +243,17 @@ class ReflowTestCase( unittest.TestCase ):
             "but its otherwise nothing special.\n\n" +
             ">And here I am going to give a soft break \n" +
             ">>And change the quoting depth - this is an illegal operation" )
-        self.assertEqual( expectedText, flow.unwrap( testText ) )
+        debug = True
+        if(debug):
+            print "\n---------------------------\ninput text\n"
+            print testText
+        outputText = flow.unwrapquoted( testText, debug ) 
+        if(debug):
+            print "\n---------------------------\nExpected text\n"
+            print expectedText
+            print "\n---------------------------\noutput text\n"
+            print outputText
+        self.assertEqual( expectedText, outputText )
 
 testSuite = unittest.TestSuite( ( unittest.makeSuite( ReflowTestCase ) ) )
 

@@ -225,8 +225,8 @@ class ReflowTestCase( unittest.TestCase ):
             "one long line\n" +
             " And now an indented (therefore quoted) section \n" +
             " which also spans a few lines, with soft line breaks (using the space " +
-            "then crlf convention)\n" +
-            "\n>Another quoted test using the greater than sign \n" +
+            "then crlf convention)\n\n" +
+            ">Another quoted test using the greater than sign \n" +
             ">but its otherwise nothing special.\n\n" +
             ">And here I am going to give a soft break \n" +
             ">>And change the quoting depth - this is an illegal operation" )
@@ -236,12 +236,12 @@ class ReflowTestCase( unittest.TestCase ):
             "too long and therefore needs to be well wrapped.\n" + 
             "\nAfter which there is a new paragraph. This new paragraph has only " + 
             "one long line\n" +
-            " And now an indented (therefore quoted) section" +
-            " which also spans a few lines, with soft line breaks (using the space " +
-            "then crlf convention)\n" +
-            "\n>Another quoted test using the greater than sign " +
+            " And now an indented (therefore quoted) section " +
+            "which also spans a few lines, with soft line breaks (using the space " +
+            "then crlf convention)\n\n" +
+            ">Another quoted test using the greater than sign " +
             "but its otherwise nothing special.\n\n" +
-            ">And here I am going to give a soft break \n" +
+            ">And here I am going to give a soft break\n" +
             ">>And change the quoting depth - this is an illegal operation" )
         debug = True
         if(debug):

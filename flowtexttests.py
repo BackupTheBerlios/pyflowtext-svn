@@ -32,7 +32,7 @@ class ReflowTestCase( unittest.TestCase ):
         if(debug):
             print "\n---------------------------\ninput text\n"
             print testText
-        outputText = flow.unwrapquoted( testText, debug ) 
+        outputText = flow.unwrap( testText, debug ) 
         if(debug):
             print "\n---------------------------\nExpected text\n"
             print expectedText
@@ -50,7 +50,7 @@ class ReflowTestCase( unittest.TestCase ):
         if(debug):
             print "\n---------------------------\ninput text\n"
             print testText
-        outputText = flow.unwrapquoted( testText, debug ) 
+        outputText = flow.unwrap( testText, debug ) 
         if(debug):
             print "\n---------------------------\noutput text\n"
             print outputText
@@ -82,7 +82,7 @@ class ReflowTestCase( unittest.TestCase ):
             "quoted and has a couple of soft " +
             "breaks in it." )
 
-        self.assertEqual( expectedText, flow.unwrapquoted( testText ) )
+        self.assertEqual( expectedText, flow.unwrap( testText ) )
 
     def testBUnwrapQuotedWithGt( self ):
         flow = flowtext.FormatText()
@@ -93,7 +93,7 @@ class ReflowTestCase( unittest.TestCase ):
             "quoted and has a couple of soft " +
             "breaks in it." )
 
-        self.assertEqual( expectedText, flow.unwrapquoted( testText ) )
+        self.assertEqual( expectedText, flow.unwrap( testText ) )
 
     def testASimpleUnwrapQuotedWithGt( self ):
         flow = flowtext.FormatText()
@@ -103,7 +103,7 @@ class ReflowTestCase( unittest.TestCase ):
         if(debug):
             print "\n---------------------------\ninput text\n"
             print testText
-        outputText = flow.unwrapquoted( testText, debug ) 
+        outputText = flow.unwrap( testText, debug ) 
         if(debug):
             print "\n---------------------------\nExpected text\n"
             print expectedText
@@ -125,7 +125,7 @@ class ReflowTestCase( unittest.TestCase ):
             "This line is not " + 
             "quoted" )
             
-        self.assertEqual( expectedText, flow.unwrapquoted( testText ) )
+        self.assertEqual( expectedText, flow.unwrap( testText ) )
 
     def testUnwrapTwoGTQuotedLines( self ):
         flow = flowtext.FormatText()
@@ -140,7 +140,7 @@ class ReflowTestCase( unittest.TestCase ):
             ">This line is also " + 
             "quoted" )
 
-        self.assertEqual( expectedText, flow.unwrapquoted( testText ) )
+        self.assertEqual( expectedText, flow.unwrap( testText ) )
 
     def testUnwrapTwoSpaceQuotedLines( self ):
         flow = flowtext.FormatText()
@@ -155,7 +155,7 @@ class ReflowTestCase( unittest.TestCase ):
             " This line is also " + 
             "quoted" )
     
-        self.assertEqual( expectedText, flow.unwrapquoted( testText ) )
+        self.assertEqual( expectedText, flow.unwrap( testText ) )
         
     def testUnwrapQuotedWithOnlySoftWrap(self):
         flow = flowtext.FormatText()
@@ -165,7 +165,7 @@ class ReflowTestCase( unittest.TestCase ):
         expectedText = ( ">This line is " +
             "quoted and has a couple of soft " +
             "breaks in it.")
-        self.assertEqual( expectedText, flow.unwrapquoted( testText ) )
+        self.assertEqual( expectedText, flow.unwrap( testText ) )
         
     def testUnwrapQuotedWithSoftWrapAndQuoted(self):
         flow = flowtext.FormatText()
@@ -175,7 +175,7 @@ class ReflowTestCase( unittest.TestCase ):
         expectedText = ( ">This line is " +
             "quoted and has a couple of soft " +
             "breaks in it.")
-        self.assertEqual( expectedText, flow.unwrapquoted( testText ) )
+        self.assertEqual( expectedText, flow.unwrap( testText ) )
         
     def testStandardiseNewlines(self):
         flow = flowtext.FormatText()
@@ -207,7 +207,7 @@ class ReflowTestCase( unittest.TestCase ):
         if(debug):
             print "\n---------------------------\ninput text\n"
             print testText
-        outputText = flow.unwrapquoted( testText, debug ) 
+        outputText = flow.unwrap( testText, debug ) 
         if(debug):
             print "\n---------------------------\nExpected text\n"
             print expectedText
@@ -247,7 +247,7 @@ class ReflowTestCase( unittest.TestCase ):
         if(debug):
             print "\n---------------------------\ninput text\n"
             print testText
-        outputText = flow.unwrapquoted( testText, debug ) 
+        outputText = flow.unwrap( testText, debug ) 
         if(debug):
             print "\n---------------------------\nExpected text\n"
             print expectedText

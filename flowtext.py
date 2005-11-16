@@ -47,7 +47,7 @@ class FormatText:
         
         #Reflow each line
         
-    def unwrapquoted( self, text, debug = False ):
+    def unwrap( self, text, debug = False ):
         """This will unwrap the text, dealing specifically with quoted stuff
         and try to keep paragraphs together"""
         text = self.standardiseNewlines(text)
@@ -116,49 +116,7 @@ class FormatText:
         replace = quotedpatternmatcher(debug)
         return re.sub( string = text, pattern=expression, repl=replace )
     
-        
 
-        
-    def unwrap( self, text ):
-        """This will unwrap the text and try to keep paragraphs together"""
-        expression = self.softnewlines
-        replace = " "
-        return re.sub( string = text, pattern=expression, repl= replace )
-
-    
-#    def unwrap(self, text):
-#        """This will unwrap the text and try to keep paragraphs together"""
-#        whitespace = False
-#        newtext = ''
-#        knownquotes = ['From ','>',' ']
-#        quotechars = ''
-#        oldquotechars = ''
-#        newpara = True
-#        newline = True
-#        for char in text:
-#            if char == '\n':
-#                newline = True
-#                oldquotechars = quotechars;
-#                quotechars = ''
-#                
-#            if(newline and not whitespace):
-#                newpara = True
-#                oldquotechars = ''                
-#            if not (whitespace and newline):
-#                newtext += char
-#                
-#            #Handle quoting
-#            if
-#            #Handle whitespace
-#            if char == ' ' or char == '\t':
-#                whitespace = True
-#            else:
-#                whitespace = False
-#                
-#        return newtext
-                
-                
-                
         
         
             

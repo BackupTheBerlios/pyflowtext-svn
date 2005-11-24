@@ -49,8 +49,16 @@ class FormatText:
         
     def wrap(self, text, debug = False):
         """This function will wrap back up a text that has previously 
-           been unrwrapped properly - using our current settings"""
-       
+           been unwrapped properly - using our current settings"""
+        #Start with basic case - match (greedy) up to maxwidth chars 
+        # a space which are not newlines
+        boundarymatch = "(?P<groupmatch>[^\n\r]{1," + (self.maxwidth - 1).__str__() + "} )"
+        replace = "\g<groupmatch>\n"
+        if debug:
+            print "in wrap function:\n"
+            print "match is " + boundarymatch + "\n"
+            print "replace is " + replace + "\n"
+        return re.sub(boundarymatch, replace, text)
         
     def unwrap( self, text, debug = False ):
         """This will unwrap the text, dealing specifically with quoted stuff

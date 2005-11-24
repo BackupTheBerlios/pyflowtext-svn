@@ -217,33 +217,33 @@ class ReflowTestCase( unittest.TestCase ):
     
     def testUnwrapAll( self ):
         flow = flowtext.FormatText()
-        testText = ( "This line spans a few \n" + 
-            "lines and has a couple of soft \n" +
-            "breaks in it. It also has a very, very long line which spans a little " +
-            "too long and therefore needs to be well wrapped.\n" + 
-            "\nAfter which there is a new paragraph. This new paragraph has only " + 
-            "one long line\n" +
-            " And now an indented (therefore quoted) section \n" +
-            " which also spans a few lines, with soft line breaks (using the space " +
-            "then crlf convention)\n\n" +
-            ">Another quoted test using the greater than sign \n" +
-            ">but its otherwise nothing special.\n\n" +
-            ">And here I am going to give a soft break \n" +
+        testText = ( "This line spans a few \n"
+            "lines and has a couple of soft \n"
+            "breaks in it. It also has a very, very long line which spans a little "
+            "too long and therefore needs to be well wrapped.\n"
+            "\nAfter which there is a new paragraph. This new paragraph has only "
+            "one long line\n"
+            " And now an indented (therefore quoted) section \n"
+            " which also spans a few lines, with soft line breaks (using the space "
+            "then crlf convention)\n\n"
+            ">Another quoted test using the greater than sign \n"
+            ">but its otherwise nothing special.\n\n"
+            ">And here I am going to give a soft break \n"
             ">>And change the quoting depth - this is an illegal operation" )
-        expectedText = ( "This line spans a few " + 
-            "lines and has a couple of soft " +
-            "breaks in it. It also has a very, very long line which spans a little " +
-            "too long and therefore needs to be well wrapped.\n" + 
-            "\nAfter which there is a new paragraph. This new paragraph has only " + 
-            "one long line\n" +
-            " And now an indented (therefore quoted) section " +
-            "which also spans a few lines, with soft line breaks (using the space " +
-            "then crlf convention)\n\n" +
-            ">Another quoted test using the greater than sign " +
-            "but its otherwise nothing special.\n\n" +
-            ">And here I am going to give a soft break\n" +
+        expectedText = ( "This line spans a few "
+            "lines and has a couple of soft "
+            "breaks in it. It also has a very, very long line which spans a little "
+            "too long and therefore needs to be well wrapped.\n"
+            "\nAfter which there is a new paragraph. This new paragraph has only "
+            "one long line\n"
+            " And now an indented (therefore quoted) section "
+            "which also spans a few lines, with soft line breaks (using the space "
+            "then crlf convention)\n\n"
+            ">Another quoted test using the greater than sign "
+            "but its otherwise nothing special.\n\n"
+            ">And here I am going to give a soft break\n"
             ">>And change the quoting depth - this is an illegal operation" )
-        debug = True
+        debug = False
         if(debug):
             print "\n---------------------------\ninput text\n"
             print testText
@@ -254,6 +254,31 @@ class ReflowTestCase( unittest.TestCase ):
             print "\n---------------------------\noutput text\n"
             print outputText
         self.assertEqual( expectedText, outputText )
+
+    def testWrapLong(self):
+        flow = flowtext.FormatText()
+        testText = ( "This line is very, very long indeed and will go on and on and on "
+            "and will be over 66 characters long hopefully forcing the wrapping "
+            "mechanism into action. Of course we then need to investigate real word "
+            "boundary wrapping, not merely character splitting\n" )
+        expectedText = ("This line is very, very long indeed and will go on and on and on \n"
+            "and will be over 66 characters long hopefully forcing the \n"
+            "wrapping mechanism into action. Of course we then need to \n"
+            "investigate real word boundary wrapping, not merely character \n"
+            "splitting\n" )
+        debug = False
+        if(debug):
+            print "\n---------------------------\ninput text\n"
+            print testText
+        outputText = flow.wrap( testText, debug ) 
+        if(debug):
+            print "\n---------------------------\nExpected text\n"
+            print expectedText
+            print "\n---------------------------\noutput text\n"
+            print outputText
+
+        self.assertEqual( expectedText, outputText )    
+        
 
 testSuite = unittest.TestSuite( ( unittest.makeSuite( ReflowTestCase ) ) )
 

@@ -188,6 +188,36 @@ class ReflowTestCase( unittest.TestCase ):
                     "And another\n" + 
                     "And yet another\n")
         self.assertEqual( expectedText, flow.standardiseNewlines(testText))
+        
+    def testUnwrapUsenetSignature(self):
+        flow = flowtext.FormatText()
+        testText = ( " This line is \n"
+            " quoted and has a couple of soft \n"
+            " breaks in it.\n\n"
+            ">This line is also \n" 
+            ">quoted and has an \n"
+            ">example of embaressing wrap\n"
+            "-- \n" 
+            "And this is a usenet signature")
+        expectedText = ( " This line is "
+            "quoted and has a couple of soft "
+            "breaks in it.\n\n"
+            ">This line is also "
+            "quoted and has an "
+            "example of embaressing wrap\n"
+            "-- \n"
+            "And this is a usenet signature")
+        debug = False
+        if(debug):
+            print "\n---------------------------\ninput text\n"
+            print testText
+        outputText = flow.unwrap( testText, debug ) 
+        if(debug):
+            print "\n---------------------------\nExpected text\n"
+            print expectedText
+            print "\n---------------------------\noutput text\n"
+            print outputText
+        self.assertEqual( expectedText, outputText )       
     
     def testUnwrapMixedQuoted( self ):
         flow = flowtext.FormatText()

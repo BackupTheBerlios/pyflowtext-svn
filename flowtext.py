@@ -14,7 +14,7 @@ class FormatText:
         RFC 2646 that 66 character lines are most readable"""
         self.setMaxWidth( maxwidth )
         #Set a useful item
-        self.softnewlines = " \n(?=[^\n])"
+        self.softnewlines = "(?<!--) \n(?=[^\n])"
         
     def standardiseNewlines(self, text):
         """This function turns ALL newlines into a simple \n sequence.
@@ -46,6 +46,11 @@ class FormatText:
         #unflow quoted strings (but place back in quote level)
         
         #Reflow each line
+        
+    def wrap(self, text, debug = False):
+        """This function will wrap back up a text that has previously 
+           been unrwrapped properly - using our current settings"""
+       
         
     def unwrap( self, text, debug = False ):
         """This will unwrap the text, dealing specifically with quoted stuff

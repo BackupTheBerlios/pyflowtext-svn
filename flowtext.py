@@ -59,77 +59,73 @@ class FormatText:
             print "match is " + boundarymatch + "\n"
             print "replace is " + replace + "\n"
         return re.sub(boundarymatch, replace, text)
+
+    class unwrapReplaceWorker:
+        """This class offers a callable to be used in the callback for
+            the regular expression replace. It allows persistance
+            Of some variables and user parameters."""
+        def __init__( self, debug ):
+            self.quotelevel = None
+            self.debug = debug
+            
+        def __call__( self, matchobj ):
+            if self.debug:
+                print matchobj.groups()
+            if not matchobj.group("softnewline"):
+                if self.debug:
+                    print "\nNonsoft newline"
+                #if we have a quote, and not after a soft new line(wrap)
+                if matchobj.group( "quote" ):
+                    if(self.debug):
+                        print "\nNotsoft Replacing the quotelevel object '" , self.quotelevel, \
+                                "' with '" +  matchobj.group( "quote" ) + "'"
+                    #then set quotelevel to the new quote
+                    self.quotelevel = matchobj.group( "quote" )                
+                #return (with out changing anything)
+                return matchobj.group( 0 )
+            #We have got a soft newline
+            else:
+                if self.debug:
+                    print "\nSoft newline matched";
+                #if we have a quote pattern (after a soft break)
+                if matchobj.group( "quote" ):
+                    # If we have a previously stored quote level
+                    #  and this one doesnt match
+                    if ( self.quotelevel != matchobj.group( "quote" ) ):
+                        #   reset the quote level to the new one
+                        if(self.debug):
+                            print "\nReplacing the quotelevel object '" , self.quotelevel , \
+                                "' with '" ,  matchobj.group( "quote" ) , "'"
+                        self.quotelevel = matchobj.group( "quote" )
+                        #   dont continue the line (less soft break)
+                        return "\n" + matchobj.group( "quote" )
+                    elif (self.debug):
+                        print "Keeping quote level, and unwrapping"
+                else:                    
+                    if(self.debug):
+                        print "\nSimple unwrap - removing soft break"
+                    pass;
+                    #if(self.debug):
+                    #    print "\nSoft Discarding quotelevel object"
+                    #self.quotelevel = None
+                    # join the line by returning a single space (removing the softbreak and quote)
+                return " "
         
     def unwrap( self, text, debug = False ):
         """This will unwrap the text, dealing specifically with quoted stuff
         and try to keep paragraphs together"""
         text = self.standardiseNewlines(text)
-
-        #This class offers a callable to be used in the callback for
-        #the regular expression replace
-        class quotedpatternmatcher:
-            def __init__( self, debug ):
-                self.quotelevel = None
-                self.debug = debug
-                
-            def __call__( self, matchobj ):
-                if self.debug:
-                    print matchobj.groups()
-                if not matchobj.group("softnewline"):
-                    if self.debug:
-                        print "\nNonsoft newline"
-                    #if we have a quote, and not after a soft new line(wrap)
-                    if matchobj.group( "quote" ):
-                        if(self.debug):
-                            print "\nNotsoft Replacing the quotelevel object '" , self.quotelevel, \
-                                    "' with '" +  matchobj.group( "quote" ) + "'"
-                        #then set quotelevel to the new quote
-                        self.quotelevel = matchobj.group( "quote" )                
-                    #return (with out changing anything)
-                    return matchobj.group( 0 )
-                #We have got a soft newline
-                else:
-                    if self.debug:
-                        print "\nSoft newline matched";
-                    #if we have a quote pattern (after a soft break)
-                    if matchobj.group( "quote" ):
-                        # If we have a previously stored quote level
-                        #  and this one doesnt match
-                        if ( self.quotelevel != matchobj.group( "quote" ) ):
-                            #   reset the quote level to the new one
-                            if(self.debug):
-                                print "\nReplacing the quotelevel object '" , self.quotelevel , \
-                                    "' with '" ,  matchobj.group( "quote" ) , "'"
-                            self.quotelevel = matchobj.group( "quote" )
-                            #   dont continue the line (less soft break)
-                            return "\n" + matchobj.group( "quote" )
-                        elif (self.debug):
-                            print "Keeping quote level, and unwrapping"
-                    else:                    
-                        if(self.debug):
-                            print "\nSimple unwrap - removing soft break"
-                        pass;
-                        #if(self.debug):
-                        #    print "\nSoft Discarding quotelevel object"
-                        #self.quotelevel = None
-                        # join the line by returning a single space (removing the softbreak and quote)
-                    return " "
-            
-
-        #quotematch = "(?:(?:[> ]+)|(?:From ))"
+        #TODO: "From " quote style as per RFC
+        #The expression is an untagged group of one or more quote 
+        #characters. of course - a user may tag this, or extend the group
         quotematch = "(?:[> ]+)"
         #here we must start with a softnewline match or the start of a line
         expression = "(?:(?P<softnewline>"+ self.softnewlines + ")|(\n|^))"
         #Then we may (or may not) have a quotematch
         expression += "(?P<quote>" + quotematch + ")?"
-        #either followed by something that is NOT a quotematch(making sure we dont get any more
-        #quotematches
+        #either followed by something that is NOT a quotematch-making sure we 
+        #dont get any more quotematches
         expression += "(?!" + quotematch + ")"
         #Decision has been to go with complex pattern matcher
-        replace = quotedpatternmatcher(debug)
+        replace = FormatText.unwrapReplaceWorker(debug)
         return re.sub( string = text, pattern=expression, repl=replace )
-    
-
-        
-        
-            

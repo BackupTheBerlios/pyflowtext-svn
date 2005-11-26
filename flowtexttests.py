@@ -320,7 +320,7 @@ class ReflowTestCase( unittest.TestCase ):
             ">wrapping mechanism into action. Of course we then need to \n"
             ">investigate real word boundary wrapping, not merely character \n"
             ">splitting\n" )
-        debug = False
+        debug = True
         if(debug):
             print "\n---------------------------\ninput text\n"
             print testText

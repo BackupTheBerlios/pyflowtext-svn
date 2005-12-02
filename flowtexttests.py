@@ -399,7 +399,26 @@ class ReflowTestCase( unittest.TestCase ):
             print expectedText
             print "\n---------------------------\noutput text\n"
             print outputText
-        
+            
+    def testWrapLongestLine(self):
+        flow = flowtext.FormatText()
+        testText = ( "ThisIsAllOneWordAndWillNotBeWrappedThislineisvery,verylongindeedandwillgoonandonandon"
+            "andwillbeover66characterslonghopefullyforcingthewrapping"
+            "mechanismintoaction.Ofcoursewethenneedtoinvestigaterealword"
+            "boundarywrapping,notmerelycharactersplitting\n" )
+        expectedText = testText
+        debug = False
+        if(debug):
+            print "\n---------------------------\ninput text\n"
+            print testText
+        outputText = flow.wrap( testText, debug ) 
+        if(debug):
+            print "\n---------------------------\nExpected text\n"
+            print expectedText
+            print "\n---------------------------\noutput text\n"
+            print outputText
+
+        self.assertEqual( expectedText, outputText )        
     def testWrapQuoted(self):
         flow = flowtext.FormatText()
         testText = ( ">This line is very, very long indeed and will go on and on and on "

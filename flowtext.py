@@ -50,29 +50,6 @@ class FormatText:
         #unflow quoted strings (but place back in quote level)
         
         #Reflow each line
-
-    class wrapReplaceWorker:
-        """Helper class for the wrap function only"""        
-        def __init__( self, debug ):
-            self.quotelevel = None
-            self.debug = debug
-            self.firstline = True
-            
-        def __call__( self, matchobj ):
-            if self.debug:
-                print matchobj.groups()
-            #Handle the simplest case
-            retval = ""
-            if matchobj.group( "newline" ) or self.firstline:
-                self.quotelevel = matchobj.group( "quote" )                
-                if self.quotelevel:
-                    retval = self.quotelevel
-                self.firstline = False
-            if self.quotelevel:
-                return ''.join( ( retval, 
-                    matchobj.group( "groupmatch" ), "\n" , self.quotelevel ) )
-            else:
-                return "%s\n" % matchobj.group( "groupmatch" )
     
     wrapmatch = ''.join( ( 
          #Match a possible newline
@@ -120,12 +97,6 @@ class FormatText:
             if count > 0:
                 output.append( "%s%s" % ( quote, ''.join( outputTemp ) ) )
         return '\n'.join(output)
-
-#        boundarymatch = FormatText.wrapmatch % ( self.maxwidth - 1 )            
-#        replace = FormatText.wrapReplaceWorker( debug )
-#        if debug:
-#            print "in wrap function:\n"
-#        return re.sub( boundarymatch, replace, text )
 
     class unwrapReplaceWorker:
         """This class offers a callable to be used in the callback for

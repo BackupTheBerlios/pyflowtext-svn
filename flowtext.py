@@ -64,11 +64,9 @@ class FormatText:
             #Handle the simplest case
             retval = ""
             if matchobj.group( "newline" ) or self.firstline:
-                if matchobj.group( "quote" ):
-                    self.quotelevel = matchobj.group( "quote" )
+                self.quotelevel = matchobj.group( "quote" )                
+                if self.quotelevel:
                     retval = self.quotelevel
-                else:
-                    self.quotelevel = None
                 self.firstline = False
             if self.quotelevel:
                 return ''.join( ( retval, 
@@ -76,27 +74,58 @@ class FormatText:
             else:
                 return "%s\n" % matchobj.group( "groupmatch" )
     
-    wrapmatch = ''.join((
+    wrapmatch = ''.join( ( 
          #Match a possible newline
-         "(?P<newline>\n)?",
+         "(?P<newline>\n)?", 
          # Match any possible quote characters
-         "(?P<quote>%s)?" % quotematch,
+         "(?P<quote>%s)?" % quotematch, 
         #Match a group named groupmatch, which may be anything that is not a 
         #newline
-         "(?P<groupmatch>[^\n]",
+         "(?P<groupmatch>[^\n]", 
         #And there may be between 1 and the maxwidth, but must be followed by a
         #space
-        "{1,%s} )"))
+        "{1,%s} )" ) )
         
     def wrap( self, text, debug = False ):
         """This function will wrap back up a text that has previously 
            been unwrapped properly - using our current settings"""
+        output = []    
         #Match a possible newline
-        boundarymatch = FormatText.wrapmatch % ( self.maxwidth - 1 )
-        replace = FormatText.wrapReplaceWorker( debug )
-        if debug:
-            print "in wrap function:\n"
-        return re.sub( boundarymatch, replace, text )
+        for line in text.splitlines(True):
+            #Match the quote characters
+            quoteMatchObj = re.match( "^%s" % FormatText.quotematch, line )
+            if quoteMatchObj:
+                quote = quoteMatchObj.group( 0 )
+            else:
+                quote = ''
+            linelength = self.maxwidth - len( quote )
+            count = 0
+            lastspace = 0
+            outputTemp = []
+            for char in line[len( quote ):]:
+                count += 1
+                outputTemp.append( char )
+                if char==' ':
+                    lastspace = count
+                #Its time for a newline
+                if count >= linelength and lastspace > 0:
+                    #divide at last space
+                    output.append( "%s%s" % ( quote, ''.join( outputTemp[:lastspace] ) ) )
+                    #reset outputtemp
+                    outputTemp = outputTemp[lastspace:]
+                    count -= lastspace
+                    lastspace = 0
+            if debug:
+                print "Output temp is currently '%s'\n" % ''.join(outputTemp)
+            if count > 0:
+                output.append( "%s%s" % ( quote, ''.join( outputTemp ) ) )
+        return '\n'.join(output)
+
+#        boundarymatch = FormatText.wrapmatch % ( self.maxwidth - 1 )            
+#        replace = FormatText.wrapReplaceWorker( debug )
+#        if debug:
+#            print "in wrap function:\n"
+#        return re.sub( boundarymatch, replace, text )
 
     class unwrapReplaceWorker:
         """This class offers a callable to be used in the callback for
@@ -155,7 +184,7 @@ class FormatText:
         text = self.standardiseNewlines( text )
 
         #here we must start with a softnewline match or the start of a line
-        expression = "(?:(?P<softnewline>%s)|(\n|^))" % (FormatText.softnewlines)
+        expression = "(?:(?P<softnewline>%s)|(\n|^))" % ( FormatText.softnewlines )
         #Then we may (or may not) have a quotematch
         expression += "(?P<quote>%s)?" %( FormatText.quotematch )
         #either followed by something that is NOT a quotematch-making sure we 
@@ -165,8 +194,4 @@ class FormatText:
         replace = FormatText.unwrapReplaceWorker( debug )
         return re.sub( string = text, pattern=expression, repl=replace )
 
-    def nonReUnwrap( self, text, debug= False ):
-        output = ""
-        for line in text.splitlines():
-            pass
         

@@ -419,6 +419,27 @@ class ReflowTestCase( unittest.TestCase ):
             print outputText
 
         self.assertEqual( expectedText, outputText )        
+    
+    def testUnwrapSpaceStuffed(self):
+        flow = flowtext.FormatText()
+        testText = ( " >This is a special line, and although it is more than 66 characters, \n"
+            " it is space stuffed, and therefore the > should be ignored" )
+        expectedText = (" >This is a special line, and although it is more than 66 characters, "
+            "it is space stuffed, and therefore the > should be ignored" )
+        debug = True
+        if(debug):
+            print "\n---------------------------\ninput text\n"
+            print testText
+        outputText = flow.unwrap( testText, debug ) 
+        if(debug):
+            print "\n---------------------------\nExpected text\n"
+            print expectedText
+            print "\n---------------------------\noutput text\n"
+            print outputText
+
+        self.assertEqual( expectedText, outputText )
+        
+    
     def testWrapQuoted(self):
         flow = flowtext.FormatText()
         testText = ( ">This line is very, very long indeed and will go on and on and on "

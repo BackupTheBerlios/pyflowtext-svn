@@ -46,23 +46,8 @@ class FormatText:
         be flowed"""
         if not isinstance( text, str ):
             raise TypeError( "Parameter to flow must be of type string" )
-        #Deal with unflowing everything, removing all soft breaks
-        #unflow quoted strings (but place back in quote level)
-        
-        #Reflow each line
+        return self.wrap(self.unwrap(text, debug), debug)
     
-    wrapmatch = ''.join( ( 
-         #Match a possible newline
-         "(?P<newline>\n)?", 
-         # Match any possible quote characters
-         "(?P<quote>%s)?" % quotematch, 
-        #Match a group named groupmatch, which may be anything that is not a 
-        #newline
-         "(?P<groupmatch>[^\n]", 
-        #And there may be between 1 and the maxwidth, but must be followed by a
-        #space
-        "{1,%s} )" ) )
-        
     def wrap( self, text, debug = False ):
         """This function will wrap back up a text that has previously 
            been unwrapped properly - using our current settings"""

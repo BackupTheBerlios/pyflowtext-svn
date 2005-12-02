@@ -9,10 +9,11 @@ class FormatText:
     where necessary, it is very good for formatting text for viewing."""
     #Define a softnew line constant
     softnewlines = "(?<!--) \n(?=[^\n])"
-    #TODO: "From " quote style as per RFC
     #The expression is an untagged group of one or more quote 
     #characters. of course - a user may tag this, or extend the group
-    quotematch = "(?:[> ]+)"        
+    quotematch = "(?:>+)"
+    #TODO: "From " quote style as per RFC
+    spacestuffmatch = " "
     
     def __init__( self, maxwidth = 66 ):
         """The parameter maxwidth specifies the maximum width 
@@ -93,35 +94,42 @@ class FormatText:
             
         def __call__( self, matchobj ):
             if self.debug:
-                print matchobj.groups()
+                print matchobj.groupdict()
+            currentQuote = matchobj.group( "quote" ) or matchobj.group( "spacestuff" )
             if not matchobj.group( "softnewline" ):
                 if self.debug:
                     print "\nNonsoft newline"
                 #if we have a quote, and not after a soft new line(wrap)
-                if matchobj.group( "quote" ):
+                if currentQuote:
                     if( self.debug ):
                         print "\nNotsoft Replacing the quotelevel object '%s'"\
-                                "' with '%s'" % ( self.quotelevel, matchobj.group( "quote" ) )
+                                "' with '%s'" % ( self.quotelevel, currentQuote )
                     #then set quotelevel to the new quote
-                    self.quotelevel = matchobj.group( "quote" )                
+                    self.quotelevel = currentQuote                
                 #return (with out changing anything)
                 return matchobj.group( 0 )
             #We have got a soft newline
-            else:
+            else:                
                 if self.debug:
                     print "\nSoft newline matched";
+                    if matchobj.group( "quote" ):
+                        print "quote matched\n"
+                    if matchobj.group( "spacestuff" ):
+                        print "Space stuffing matched\n"
                 #if we have a quote pattern (after a soft break)
-                if matchobj.group( "quote" ):
+                if currentQuote:
+                    if(self.debug):
+                        print "quote '%s' matched\n" % currentQuote
                     # If we have a previously stored quote level
                     #  and this one doesnt match
-                    if ( self.quotelevel != matchobj.group( "quote" ) ):
+                    if ( self.quotelevel != currentQuote ):
                         #   reset the quote level to the new one
                         if( self.debug ):
                             print "\nReplacing the quotelevel object '%s'"\
-                                "' with '%s'" % ( self.quotelevel, matchobj.group( "quote" ) )
-                        self.quotelevel = matchobj.group( "quote" )
+                                "' with '%s'" % ( self.quotelevel, currentQuote )
+                        self.quotelevel = currentQuote
                         #   dont continue the line (less soft break)
-                        return "\n%s" % matchobj.group( "quote" )
+                        return "\n%s" % currentQuote
                     elif ( self.debug ):
                         print "Keeping quote level, and unwrapping"
                 else:                    
@@ -140,12 +148,14 @@ class FormatText:
         text = self.standardiseNewlines( text )
 
         #here we must start with a softnewline match or the start of a line
-        expression = "(?:(?P<softnewline>%s)|(\n|^))" % ( FormatText.softnewlines )
+        expression = "(?:(?P<softnewline>%s)|(?:\n|^))" % ( FormatText.softnewlines )
         #Then we may (or may not) have a quotematch
-        expression += "(?P<quote>%s)?" %( FormatText.quotematch )
+        expression += "(?:(?P<quote>%s)" %( FormatText.quotematch )
         #either followed by something that is NOT a quotematch-making sure we 
         #dont get any more quotematches
         expression += "(?!%s)" % ( FormatText.quotematch )
+        #or starts space stuffed
+        expression += "|(?P<spacestuff>%s))?" % FormatText.spacestuffmatch
         #Decision has been to go with complex pattern matcher
         replace = FormatText.unwrapReplaceWorker( debug )
         return re.sub( string = text, pattern=expression, repl=replace )

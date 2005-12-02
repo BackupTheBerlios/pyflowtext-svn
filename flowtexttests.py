@@ -389,7 +389,7 @@ class ReflowTestCase( unittest.TestCase ):
             " it is space stuffed, and therefore the > should be ignored" )
         expectedText = (" >This is a special line, and although it is more than 66 characters, "
             "it is space stuffed, and therefore the > should be ignored" )
-        debug = True
+        debug = False
         if(debug):
             print "\n---------------------------\ninput text\n"
             print testText

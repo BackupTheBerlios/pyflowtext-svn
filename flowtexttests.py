@@ -92,28 +92,6 @@ class ReflowTestCase( unittest.TestCase ):
             "paragraph" )
 
         self.assertEqual( expectedText, flow.unwrap( testText ) )
-                
-    
-    def testUnwrapQuotedWithSpace( self ):
-        flow = flowtext.FormatText()
-        testText = ( " This line is \n" +
-            " quoted and has a couple of soft \n" +
-            " breaks in it." )
-        expectedText = ( " This line is " +
-            "quoted and has a couple of soft " +
-            "breaks in it." )
-        debug = False
-        if(debug):
-            print "\n---------------------------\ninput text\n"
-            print testText
-        outputText = flow.unwrap( testText, debug ) 
-        if(debug):
-            print "\n---------------------------\nExpected text\n"
-            print expectedText
-            print "\n---------------------------\noutput text\n"
-            print outputText
-
-        self.assertEqual( outputText, outputText )   
 
     def testBUnwrapQuotedWithGt( self ):
         flow = flowtext.FormatText()
@@ -172,21 +150,6 @@ class ReflowTestCase( unittest.TestCase ):
             "quoted" )
 
         self.assertEqual( expectedText, flow.unwrap( testText ) )
-
-    def testUnwrapTwoSpaceQuotedLines( self ):
-        flow = flowtext.FormatText()
-        testText = ( " This line is \n" +
-            " quoted and has a couple of soft \n" +
-            " breaks in it.\n\n" +
-            " This line is also \n" + 
-            " quoted" )
-        expectedText = ( " This line is " +
-            "quoted and has a couple of soft " +
-            "breaks in it.\n\n" +
-            " This line is also " + 
-            "quoted" )
-    
-        self.assertEqual( expectedText, flow.unwrap( testText ) )
         
     def testUnwrapQuotedWithOnlySoftWrap(self):
         flow = flowtext.FormatText()
@@ -222,15 +185,15 @@ class ReflowTestCase( unittest.TestCase ):
         
     def testUnwrapUsenetSignature(self):
         flow = flowtext.FormatText()
-        testText = ( " This line is \n"
-            " quoted and has a couple of soft \n"
-            " breaks in it.\n\n"
+        testText = ( "This line is \n"
+            "quoted and has a couple of soft \n"
+            "breaks in it.\n\n"
             ">This line is also \n" 
             ">quoted and has an \n"
             ">example of embaressing wrap\n"
             "-- \n" 
             "And this is a usenet signature")
-        expectedText = ( " This line is "
+        expectedText = ( "This line is "
             "quoted and has a couple of soft "
             "breaks in it.\n\n"
             ">This line is also "
@@ -268,13 +231,13 @@ class ReflowTestCase( unittest.TestCase ):
         
     def testUnwrapMixedQuoted( self ):
         flow = flowtext.FormatText()
-        testText = ( " This line is \n" +
-            " quoted and has a couple of soft \n" +
-            " breaks in it.\n\n" +
+        testText = ( "This line is \n" +
+            "quoted and has a couple of soft \n" +
+            "breaks in it.\n\n" +
             ">This line is also \n" + 
             ">quoted and has an \n" + 
             ">example of embaressing wrap")
-        expectedText = ( " This line is " +
+        expectedText = ( "This line is " +
             "quoted and has a couple of soft " +
             "breaks in it.\n\n" +
             ">This line is also " + 
@@ -300,7 +263,7 @@ class ReflowTestCase( unittest.TestCase ):
             "too long and therefore needs to be well wrapped.\n"
             "\nAfter which there is a new paragraph. This new paragraph has only "
             "one long line\n"
-            " And now an indented (therefore quoted) section \n"
+            " And now an indented (therefore space stuffed) section \n"
             " which also spans a few lines, with soft line breaks (using the space "
             "then crlf convention)\n\n"
             ">Another quoted test using the greater than sign \n"
@@ -313,7 +276,7 @@ class ReflowTestCase( unittest.TestCase ):
             "too long and therefore needs to be well wrapped.\n"
             "\nAfter which there is a new paragraph. This new paragraph has only "
             "one long line\n"
-            " And now an indented (therefore quoted) section "
+            " And now an indented (therefore space stuffed) section "
             "which also spans a few lines, with soft line breaks (using the space "
             "then crlf convention)\n\n"
             ">Another quoted test using the greater than sign "

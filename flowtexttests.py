@@ -6,47 +6,28 @@ class ReflowTestCase( unittest.TestCase ):
         pass
     
     def testConstruction( self ):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         self.assertEqual( 66, flow.getMaxWidth() )
         #Try constructing again
-        flow = flowtext.FormatText( 23 )
+        flow = flowtext.parser( 23 )
         self.assertEqual( 23, flow.getMaxWidth() )
     
     def testSetMaxWidth( self ):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         flow.setMaxWidth( 40 )
         self.assertEqual( 40, flow.getMaxWidth() )
         def setOverWide():
             flow.setMaxWidth( 99 )
         self.assertRaises( ValueError, setOverWide )
-
-#    def testBasicNonReUnwrap( self ):
-#        flow = flowtext.FormatText()
-#        testText = ( "This line spans a few \n" +
-#            "lines and has a couple of soft \n" +
-#            "breaks in it. " )
-#        expectedText = ( "This line spans a few " + 
-#            "lines and has a couple of soft " +
-#            "breaks in it. " )
-#        debug = False
-#        if(debug):
-#            print "\n---------------------------\ninput text\n"
-#            print testText
-#        outputText = flow.nonReUnwrap( testText, debug ) 
-#        if(debug):
-#            print "\n---------------------------\nExpected text\n"
-#            print expectedText
-#            print "\n---------------------------\noutput text\n"
-#            print outputText
         
     def testBasicNormalUnwrap( self ):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( "This line spans a few \n" +
             "lines and has a couple of soft \n" +
-            "breaks in it. " )
+            "breaks in it.\n" )
         expectedText = ( "This line spans a few " + 
             "lines and has a couple of soft " +
-            "breaks in it. " )
+            "breaks in it.\n" )
         debug = False
         if(debug):
             print "\n---------------------------\ninput text\n"
@@ -61,10 +42,10 @@ class ReflowTestCase( unittest.TestCase ):
         self.assertEqual( expectedText, outputText )    
 
     def testNegativeUnwrap( self ):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( "This line spans a few \n" +
             "lines and has a couple of soft \n" +
-            "breaks in it. " )
+            "breaks in it. \n" )
         debug = False
         if(debug):
             print "\n---------------------------\ninput text\n"
@@ -79,35 +60,35 @@ class ReflowTestCase( unittest.TestCase ):
         self.assertNotEqual( testText, outputText )    
     
     def testUnwrapTwoParagraphs( self ):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( "This line spans a few \n" +
             "lines and has a couple of soft \n" +
             "breaks in it.\n\n" + 
             "and sneakily has a second \n" + 
-            "paragraph" )
+            "paragraph\n" )
         expectedText = ( "This line spans a few " + 
             "lines and has a couple of soft " +
             "breaks in it.\n\n" +
             "and sneakily has a second " + 
-            "paragraph" )
+            "paragraph\n" )
 
         self.assertEqual( expectedText, flow.unwrap( testText ) )
 
     def testBUnwrapQuotedWithGt( self ):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( ">This line is \n" +
             ">quoted and has a couple of soft \n" +
-            ">breaks in it." )
+            ">breaks in it.\n" )
         expectedText = ( ">This line is " +
             "quoted and has a couple of soft " +
-            "breaks in it." )
+            "breaks in it.\n" )
 
         self.assertEqual( expectedText, flow.unwrap( testText ) )
 
     def testASimpleUnwrapQuotedWithGt( self ):
-        flow = flowtext.FormatText()
-        testText = ( ">This line is \n>quoted" )
-        expectedText = ( ">This line is quoted" )
+        flow = flowtext.parser()
+        testText = ( ">This line is \n>quoted\n" )
+        expectedText = ( ">This line is quoted\n" )
         debug = False
         if(debug):
             print "\n---------------------------\ninput text\n"
@@ -122,57 +103,57 @@ class ReflowTestCase( unittest.TestCase ):
         self.assertEqual( expectedText, outputText )
 
     def testUnwrapMixedNormalAndQuoted( self ):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( ">This line is \n" +
             ">quoted and has a couple of soft \n" +
             ">breaks in it.\n\n" +
             "This line is not \n" + 
-            "quoted" )
+            "quoted\n" )
         expectedText = ( ">This line is " +
             "quoted and has a couple of soft " +
             "breaks in it.\n\n" +
             "This line is not " + 
-            "quoted" )
+            "quoted\n" )
             
         self.assertEqual( expectedText, flow.unwrap( testText ) )
 
     def testUnwrapTwoGTQuotedLines( self ):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( ">This line is \n" +
             ">quoted and has a couple of soft \n" +
             ">breaks in it.\n\n" +
             ">This line is also \n" + 
-            ">quoted" )
+            ">quoted\n" )
         expectedText = ( ">This line is " +
             "quoted and has a couple of soft " +
             "breaks in it.\n\n" +
             ">This line is also " + 
-            "quoted" )
+            "quoted\n" )
 
         self.assertEqual( expectedText, flow.unwrap( testText ) )
         
     def testUnwrapQuotedWithOnlySoftWrap(self):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( ">This line is \n" +
             "quoted and has a couple of soft \n" +
-            "breaks in it.")
+            "breaks in it.\n")
         expectedText = ( ">This line is " +
             "quoted and has a couple of soft " +
-            "breaks in it.")
+            "breaks in it.\n")
         self.assertEqual( expectedText, flow.unwrap( testText ) )
         
     def testUnwrapQuotedWithSoftWrapAndQuoted(self):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( ">This line is \n" +
             "quoted and has a couple of soft \n" +
-            ">breaks in it.")
+            ">breaks in it.\n")
         expectedText = ( ">This line is " +
             "quoted and has a couple of soft " +
-            "breaks in it.")
+            "breaks in it.\n")
         self.assertEqual( expectedText, flow.unwrap( testText ) )
         
     def testStandardiseNewlines(self):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ("This is a basic newline\n" + 
                     "And another type\r" + 
                     "And another\n\r" + 
@@ -184,7 +165,7 @@ class ReflowTestCase( unittest.TestCase ):
         self.assertEqual( expectedText, flow.standardiseNewlines(testText))
         
     def testUnwrapUsenetSignature(self):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( "This line is \n"
             "quoted and has a couple of soft \n"
             "breaks in it.\n\n"
@@ -192,7 +173,7 @@ class ReflowTestCase( unittest.TestCase ):
             ">quoted and has an \n"
             ">example of embaressing wrap\n"
             "-- \n" 
-            "And this is a usenet signature")
+            "And this is a usenet signature\n")
         expectedText = ( "This line is "
             "quoted and has a couple of soft "
             "breaks in it.\n\n"
@@ -200,7 +181,7 @@ class ReflowTestCase( unittest.TestCase ):
             "quoted and has an "
             "example of embaressing wrap\n"
             "-- \n"
-            "And this is a usenet signature")
+            "And this is a usenet signature\n")
         debug = False
         if(debug):
             print "\n---------------------------\ninput text\n"
@@ -214,9 +195,9 @@ class ReflowTestCase( unittest.TestCase ):
         self.assertEqual( expectedText, outputText )       
     
     def testUnwrapEndingWithCr(self):
-        flow = flowtext.FormatText()
-        testText = ( "This line ends with a CR and should be untouched\n")
-        expectedText = ( "This line ends with a CR and should be untouched\n")
+        flow = flowtext.parser()
+        testText = ( "This line ends with a CR which should be untouched\n")
+        expectedText = ( "This line ends with a CR which should be untouched\n")
         debug = False
         if(debug):
             print "\n---------------------------\ninput text\n"
@@ -230,19 +211,19 @@ class ReflowTestCase( unittest.TestCase ):
         self.assertEqual( expectedText, outputText )
         
     def testUnwrapMixedQuoted( self ):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( "This line is \n" +
             "quoted and has a couple of soft \n" +
             "breaks in it.\n\n" +
             ">This line is also \n" + 
             ">quoted and has an \n" + 
-            ">example of embaressing wrap")
+            ">example of embaressing wrap\n")
         expectedText = ( "This line is " +
             "quoted and has a couple of soft " +
             "breaks in it.\n\n" +
             ">This line is also " + 
             "quoted and has an " + 
-            "example of embaressing wrap")
+            "example of embaressing wrap\n")
         debug = False
         if(debug):
             print "\n---------------------------\ninput text\n"
@@ -256,7 +237,7 @@ class ReflowTestCase( unittest.TestCase ):
         self.assertEqual( expectedText, outputText )
     
     def testUnwrapAll( self ):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( "This line spans a few \n"
             "lines and has a couple of soft \n"
             "breaks in it. It also has a very, very long line which spans a little "
@@ -269,7 +250,7 @@ class ReflowTestCase( unittest.TestCase ):
             ">Another quoted test using the greater than sign \n"
             ">but its otherwise nothing special.\n\n"
             ">And here I am going to give a soft break \n"
-            ">>And change the quoting depth - this is an illegal operation" )
+            ">>And change the quoting depth - this is an illegal operation\n" )
         expectedText = ( "This line spans a few "
             "lines and has a couple of soft "
             "breaks in it. It also has a very, very long line which spans a little "
@@ -281,8 +262,8 @@ class ReflowTestCase( unittest.TestCase ):
             "then crlf convention)\n\n"
             ">Another quoted test using the greater than sign "
             "but its otherwise nothing special.\n\n"
-            ">And here I am going to give a soft break\n"
-            ">>And change the quoting depth - this is an illegal operation" )
+            ">And here I am going to give a soft break \n"
+            ">>And change the quoting depth - this is an illegal operation\n" )
         debug = False
         if(debug):
             print "\n---------------------------\ninput text\n"
@@ -296,7 +277,7 @@ class ReflowTestCase( unittest.TestCase ):
         self.assertEqual( expectedText, outputText )
 
     def testWrapBasic(self):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( "This line is very, very long indeed and will go on and on and on "
             "and will be over 66 characters long hopefully forcing the wrapping "
             "mechanism into action. Of course we then need to investigate real word "
@@ -320,16 +301,16 @@ class ReflowTestCase( unittest.TestCase ):
         self.assertEqual( expectedText, outputText )    
 
     def testWrapQuotedNoTrailingCr(self):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( ">This line is very, very long indeed and will go on and on and on "
             "and will be over 66 characters long hopefully forcing the wrapping "
             "mechanism into action. Of course we then need to investigate real word "
-            "boundary wrapping, not merely character splitting" )
+            "boundary wrapping, not merely character splitting\n" )
         expectedText = (">This line is very, very long indeed and will go on and on and on \n"
             ">and will be over 66 characters long hopefully forcing the \n"
             ">wrapping mechanism into action. Of course we then need to \n"
             ">investigate real word boundary wrapping, not merely character \n"
-            ">splitting" )
+            ">splitting\n" )
         debug = False
         if(debug):
             print "\n---------------------------\ninput text\n"
@@ -342,16 +323,16 @@ class ReflowTestCase( unittest.TestCase ):
             print outputText
         
     def testWrapQuotedLongQuote(self):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( ">>>>>This line is very, very long indeed and will go on and on and on "
             "and will be over 66 characters long hopefully forcing the wrapping "
             "mechanism into action. Of course we then need to investigate real word "
-            "boundary wrapping, not merely character splitting" )
+            "boundary wrapping, not merely character splitting\n" )
         expectedText = (">>>>>This line is very, very long indeed and will go on and on \n"
             ">>>>>and on and will be over 66 characters long hopefully forcing \n"
             ">>>>>the wrapping mechanism into action. Of course we then need \n"
             ">>>>>to investigate real word boundary wrapping, not merely \n"
-            ">>>>>character splitting" )
+            ">>>>>character splitting\n" )
         debug = False
         if(debug):
             print "\n---------------------------\ninput text\n"
@@ -364,7 +345,7 @@ class ReflowTestCase( unittest.TestCase ):
             print outputText
             
     def testWrapLongestLine(self):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( "ThisIsAllOneWordAndWillNotBeWrappedThislineisvery,verylongindeedandwillgoonandonandon"
             "andwillbeover66characterslonghopefullyforcingthewrapping"
             "mechanismintoaction.Ofcoursewethenneedtoinvestigaterealword"
@@ -384,11 +365,11 @@ class ReflowTestCase( unittest.TestCase ):
         self.assertEqual( expectedText, outputText )        
     
     def testUnwrapSpaceStuffed(self):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( " >This is a special line, and although it is more than 66 characters, \n"
-            " it is space stuffed, and therefore the > should be ignored" )
+            " it is space stuffed, and therefore the > should be ignored\n" )
         expectedText = (" >This is a special line, and although it is more than 66 characters, "
-            "it is space stuffed, and therefore the > should be ignored" )
+            "it is space stuffed, and therefore the > should be ignored\n" )
         debug = False
         if(debug):
             print "\n---------------------------\ninput text\n"
@@ -400,11 +381,10 @@ class ReflowTestCase( unittest.TestCase ):
             print "\n---------------------------\noutput text\n"
             print outputText
 
-        self.assertEqual( expectedText, outputText )
-        
+        self.assertEqual( expectedText, outputText )        
     
     def testWrapQuoted(self):
-        flow = flowtext.FormatText()
+        flow = flowtext.parser()
         testText = ( ">This line is very, very long indeed and will go on and on and on "
             "and will be over 66 characters long hopefully forcing the wrapping "
             "mechanism into action. Of course we then need to investigate real word "
@@ -429,7 +409,7 @@ class ReflowTestCase( unittest.TestCase ):
         
 class ReflowSpeedTests( unittest.TestCase ):
     def setUp( self ):
-        self.flow = flowtext.FormatText()        
+        self.flow = flowtext.parser()        
             
     def testWrapSpeedQuoted(self):
         testText = ( ">This line is very, very long indeed and will go on and on and on "

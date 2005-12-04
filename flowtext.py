@@ -249,6 +249,7 @@ class parser:
         """
         if(msg.get_content_type() != "text/plain" or 
            msg.get_param("format") != "flowed" or msg.is_multipart()):
-           raise ValueError("MIME Type is not handled by this parser")
+           raise ValueError("MIME Type %s is not handled by this parser" 
+                   % msg.get_content_type())
         text = msg.get_payload()
         return self.flow(text)

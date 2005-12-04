@@ -157,7 +157,9 @@ class parser:
                         line = re.sub("^%s" % currentQuote, '', line)
                     else:
                         if lastLineFlowed:
-                            line = ''.join(('\n', line))
+                            lastLine = output.pop()
+                            lastLine = re.sub("[ ]?$","\n", lastLine)
+                            output.append(lastLine)
                 #Fixed lines always reset quotedepth
                 quotedepth = None
                 lastLineFlowed = False
@@ -177,7 +179,9 @@ class parser:
                         print "\tQuote depth changed\n"
                     quotedepth = currentQuote
                     if lastLineFlowed:
-                        line = ''.join(('\n', line))
+                            lastLine = output.pop()
+                            lastLine = re.sub("[ ]?$","\n", lastLine)
+                            output.append(lastLine)
                 lastLineFlowed = True
             output.append(line)
         return ''.join(output)

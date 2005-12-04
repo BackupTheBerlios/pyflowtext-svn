@@ -235,6 +235,34 @@ class ReflowTestCase( unittest.TestCase ):
             print "\n---------------------------\noutput text\n"
             print outputText
         self.assertEqual( expectedText, outputText )
+
+    def testUnwrapIllegalQuoteChange( self ):
+        flow = flowtext.parser()
+        testText = ( ">>This line is quoted \n"
+                    ">>to a depth of 2 \n"
+                    ">but this line it wraps to is only 1 and fixed\n"
+                    ">>>This line is quoted to \n"
+                    ">>>a depth of 3 \n"
+                    ">>but this line it wraps to \n"
+                    ">>is flowed and quoted to a \n"
+                    ">>depth of 2.\n")
+        expectedText = ( ">>This line is quoted to a depth of 2\n"
+                    ">but this line it wraps to is only 1 and fixed\n"
+                    ">>>This line is quoted to a depth of 3\n"
+                    ">>but this line it wraps to is flowed and quoted to a "
+                    "depth of 2.\n" )
+        debug = False
+        if(debug):
+            print "\n---------------------------\ninput text\n"
+            print testText
+        outputText = flow.unwrap( testText, debug ) 
+        if(debug):
+            print "\n---------------------------\nExpected text\n"
+            print expectedText
+            print "\n---------------------------\noutput text\n"
+            print outputText
+        self.assertEqual( expectedText, outputText )
+
     
     def testUnwrapAll( self ):
         flow = flowtext.parser()
@@ -262,7 +290,7 @@ class ReflowTestCase( unittest.TestCase ):
             "then crlf convention)\n\n"
             ">Another quoted test using the greater than sign "
             "but its otherwise nothing special.\n\n"
-            ">And here I am going to give a soft break \n"
+            ">And here I am going to give a soft break\n"
             ">>And change the quoting depth - this is an illegal operation\n" )
         debug = False
         if(debug):

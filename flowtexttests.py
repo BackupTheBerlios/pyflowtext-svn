@@ -407,6 +407,53 @@ class ReflowTestCase( unittest.TestCase ):
 
         self.assertEqual( expectedText, outputText )
         
+    def testFlow(self):
+        flow = flowtext.parser()
+        testText = ( ">This line is very, very long \nindeed and will go on and on and on "
+            "and will be over 66 characters long hopefully \nforcing the wrapping "
+            "mechanism into action. Of course we then \nneed to investigate real word "
+            "boundary wrapping, not merely character \nsplitting\n" )
+        expectedText = (">This line is very, very long indeed and will go on and on and on \n"
+            ">and will be over 66 characters long hopefully forcing the \n"
+            ">wrapping mechanism into action. Of course we then need to \n"
+            ">investigate real word boundary wrapping, not merely character \n"
+            ">splitting\n" )
+        debug = False
+        if(debug):
+            print "\n---------------------------\ninput text\n"
+            print testText
+        outputText = flow.flow( testText, debug ) 
+        if(debug):
+            print "\n---------------------------\nExpected text\n"
+            print expectedText
+            print "\n---------------------------\noutput text\n"
+            print outputText
+
+        self.assertEqual( expectedText, outputText )
+
+    def testFlow79(self):
+        flow = flowtext.parser(79)
+        testText = ( ">This line is very, very long \nindeed and will go on and on and on "
+            "and will be over 79 characters long hopefully \nforcing the wrapping "
+            "mechanism into action. Of course we then \nneed to investigate real word "
+            "boundary wrapping, not merely character \nsplitting\n" )
+        expectedText = (">This line is very, very long indeed and will go on and on and on and will be \n"
+            ">over 79 characters long hopefully forcing the wrapping mechanism into action. \n"
+            ">Of course we then need to investigate real word boundary wrapping, not merely \n"
+            ">character splitting\n" )
+        debug = False
+        if(debug):
+            print "\n---------------------------\ninput text\n"
+            print testText
+        outputText = flow.flow( testText, debug ) 
+        if(debug):
+            print "\n---------------------------\nExpected text\n"
+            print expectedText
+            print "\n---------------------------\noutput text\n"
+            print outputText
+
+        self.assertEqual( expectedText, outputText )
+        
 class ReflowSpeedTests( unittest.TestCase ):
     def setUp( self ):
         self.flow = flowtext.parser()        

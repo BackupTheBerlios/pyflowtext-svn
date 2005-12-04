@@ -60,7 +60,7 @@ class parser:
             raise ValueError( "RFC2646 Specifies a maximum of 79 characters" )
         self.maxwidth = maxwidth
 
-    def flow( self, text ):
+    def flow( self, text, debug=False ):
         """This is the real workhorse function,
         The parameter text contains the text to 
         be flowed"""

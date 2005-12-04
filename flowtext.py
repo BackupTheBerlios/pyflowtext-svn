@@ -1,4 +1,5 @@
 import re
+from email.Message import Message
 
 class parser:
     """Use this object to perform flow operations on text 
@@ -42,7 +43,7 @@ class parser:
         self.setMaxWidth( maxwidth )
         
     anynewline = re.compile(r"((?:\r\n)|(?:\n\r)|(?:\n)|(?:\r))")
-        
+
     def standardiseNewlines( self, text ):
         """standardiseNewLines(text)
         This function turns ALL newlines into a simple \n sequence.
@@ -74,6 +75,7 @@ class parser:
         """
         if not isinstance( text, str ):
             raise TypeError( "Parameter to flow must be of type string" )
+        text = self.standardiseNewlines(text)
         return self.wrap(self.unwrap(text, debug), debug)
     
     def matches(self, rule, text):
@@ -84,8 +86,8 @@ class parser:
         text - fragment of text to test the rule against
         Returns - True if the text matches"""
         if self.matchdict[rule].match(text):
-            return True;
-        return False;
+            return True
+        return False
     
     def getComponent(self, rule, text):
         """getComponent(rule, text)
@@ -93,8 +95,8 @@ class parser:
         the text rule according to the rules from the 2646 ABNF"""
         matchObj = self.matchdict[rule].search(text)
         if matchObj:
-            return matchObj.group(0);
-        return False;
+            return matchObj.group(0)
+        return False
     
     def bestMatch(self, text):
         """minMatch(text)
@@ -221,4 +223,32 @@ class parser:
             if count > 0:
                 output.append( "%s%s" % ( quote, ''.join( outputTemp ) ) )
         return '\n'.join(output)
-    
+
+    def generateMessage(self, text):
+        """generateMessageObject(text)
+        This will create a headered, MIME-formatted message,
+        with content type as text/plain,format=flowed and
+        will flow the passed in text. Note an agent will still need 
+        to call the prepare function to space stfuf any sections
+        which require it.
+        You can take the return value, and just attach it, or
+        turn it into a full message by adding the required headers."""
+        msg = Message()
+        msg.set_type("text/plain")
+        msg.set_param("format", "flowed")
+        msg.set_payload( self.flow(text))
+        return msg
+        
+    def parseMessage(self, msg):
+        """parseMessageObject(msg)
+        This will take a Message object, and if it is the right
+        content type, will flow it, and output it as the user
+        agent expects.
+        Otherwise, it will throw an exception - "Not format flowed"
+        returns the text reflowed for the current agent.
+        """
+        if(msg.get_content_type() != "text/plain" or 
+           msg.get_param("format") != "flowed" or msg.is_multipart()):
+           raise ValueError("MIME Type is not handled by this parser")
+        text = msg.get_payload()
+        return self.flow(text)

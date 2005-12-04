@@ -263,7 +263,6 @@ class ReflowTestCase( unittest.TestCase ):
             print outputText
         self.assertEqual( expectedText, outputText )
 
-    
     def testUnwrapAll( self ):
         flow = flowtext.parser()
         testText = ( "This line spans a few \n"
@@ -504,6 +503,22 @@ class ReflowTestCase( unittest.TestCase ):
             print outputText
 
         self.assertEqual( expectedText, outputText )
+        
+    def testGenerateMessageObject(self):
+        flow = flowtext.parser()
+        msg = flow.generateMessage(">This line is very, very long \nindeed and will go on and on and on "
+            "and will be over 66 characters long hopefully \nforcing the wrapping "
+            "mechanism into action. Of course we then \nneed to investigate real word "
+            "boundary wrapping, not merely character \nsplitting\n")
+        expectedText = (">This line is very, very long indeed and will go on and on and on \n"
+            ">and will be over 66 characters long hopefully forcing the \n"
+            ">wrapping mechanism into action. Of course we then need to \n"
+            ">investigate real word boundary wrapping, not merely character \n"
+            ">splitting\n" )
+        
+        self.assertEqual(msg.get_content_type(), "text/plain")
+        self.assertEqual(msg.get_param("format"), "flowed")
+        self.assertEqual(msg.get_payload(), expectedText)
         
 class ReflowSpeedTests( unittest.TestCase ):
     def setUp( self ):

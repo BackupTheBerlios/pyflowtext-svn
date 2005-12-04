@@ -1,11 +1,11 @@
 import re
 
 class parser:
-    """Use this object to perform flow operations on text
-    based upon RFC2646. The unwrap routines will take text
-    formatted in RFC2646 and give back unformatted lines, perfect
-    for a text control in a GUI which does its own wrapping,
-    but as it can wrap, and insert quote '>' and ' ' characters
+    """Use this object to perform flow operations on text 
+    based upon RFC2646. The unwrap routines will take text 
+    formatted in RFC2646 and give back unformatted lines, perfect 
+    for a text control in a GUI which does its own wrapping, 
+    but as it can wrap, and insert quote '>' and ' ' characters 
     
     where necessary, it is very good for formatting text for viewing."""
     
@@ -36,7 +36,7 @@ class parser:
     def __init__( self, maxwidth = 66 ):
         """parser( maxwidth )
         Initialises the parser class.
-        maxwidth - optional, the maximum length of a flowed line
+        maxwidth - optional, the maximum length of a flowed line 
             defaults to 66 - recommended as most readable in RFC2646
         """
         self.setMaxWidth( maxwidth )
@@ -57,8 +57,8 @@ class parser:
     
     def setMaxWidth( self, maxwidth ):
         """setMaxWidth( maxwidth )
-        The maximum width you may specify here is 79. This
-        will ensure it displays correctly even on a non-flowed program.
+        The maximum width you may specify here is 79. This will 
+        ensure it displays correctly even on a non-flowed program.
         Typically, column 80 is reserved for the line-wrap indicator"""
         if not isinstance( maxwidth, int ):
             raise TypeError( "Parameter to setMaxWidth must be an integer" )
@@ -78,8 +78,8 @@ class parser:
     
     def matches(self, rule, text):
         """matches(rule, text)
-        Will return True if this text meets the requirements of the specified
-        rule according to the rules from the 2646 ABNF
+        Will return True if this text meets the requirements of 
+        the specified rule according to the rules from the 2646 ABNF
         rule - Name of the rule from RFC2646 ABNF
         text - fragment of text to test the rule against
         Returns - True if the text matches"""
@@ -89,8 +89,8 @@ class parser:
     
     def getComponent(self, rule, text):
         """getComponent(rule, text)
-        Will return a matching component if its rule is matched in the text
-        rule according to the rules from the 2646 ABNF"""
+        Will return a matching component if its rule is matched in 
+        the text rule according to the rules from the 2646 ABNF"""
         matchObj = self.matchdict[rule].search(text)
         if matchObj:
             return matchObj.group(0);
@@ -116,8 +116,10 @@ class parser:
 
     def prepNonQuotedText(self, text, debug=False ):
         """prepNonQuotedText( text )
-        This will take a section of text that isnt quoted, and
-        space stuff any lines which should be to prevent munging.
+        This will take a section of text that isnt quoted, and 
+        space stuff any lines which should be to prevent munging. 
+        A generating agent shouldnt run this on quoted text - 
+        otherwise that will also be space stuffed.
         text - contains the text to be operated on.
         Returns - prepared text"""
         output=[]

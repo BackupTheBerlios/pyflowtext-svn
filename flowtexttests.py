@@ -454,6 +454,29 @@ class ReflowTestCase( unittest.TestCase ):
 
         self.assertEqual( expectedText, outputText )
         
+    def testPrepare(self):
+        flow = flowtext.parser()
+        testText = ( "This small document needs to be space stuffed\n"
+                    ">It contains this line which is not quoted\n"
+                    " And this line with an intentional space\n"
+                    "From here to infinity\n" )
+        expectedText = ("This small document needs to be space stuffed\n"
+                    " >It contains this line which is not quoted\n"
+                    "  And this line with an intentional space\n"
+                    " From here to infinity\n"  )
+        debug = False
+        if(debug):
+            print "\n---------------------------\ninput text\n"
+            print testText
+        outputText = flow.prepNonQuotedText( testText, debug ) 
+        if(debug):
+            print "\n---------------------------\nExpected text\n"
+            print expectedText
+            print "\n---------------------------\noutput text\n"
+            print outputText
+
+        self.assertEqual( expectedText, outputText )
+        
 class ReflowSpeedTests( unittest.TestCase ):
     def setUp( self ):
         self.flow = flowtext.parser()        

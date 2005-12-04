@@ -34,24 +34,30 @@ class parser:
                  "text-char":re.compile(text_char),"non-sp":re.compile(non_sp)}
                  
     def __init__( self, maxwidth = 66 ):
-        """The parameter maxwidth specifies the maximum width 
-        for a line. Its default is 66 as this is recommmended in
-        RFC 2646 that 66 character lines are most readable"""
+        """parser( maxwidth )
+        Initialises the parser class.
+        maxwidth - optional, the maximum length of a flowed line
+            defaults to 66 - recommended as most readable in RFC2646
+        """
         self.setMaxWidth( maxwidth )
         
     anynewline = re.compile(r"((?:\r\n)|(?:\n\r)|(?:\n)|(?:\r))")
         
     def standardiseNewlines( self, text ):
-        """This function turns ALL newlines into a simple \n sequence.
+        """standardiseNewLines(text)
+        This function turns ALL newlines into a simple \n sequence.
         Thus simplifiying our job a little"""
         replace = r"\n"
         return self.anynewline.sub( replace, text)
     
     def getMaxWidth( self ):
+        """getMaxWidth()
+        Returns the current maxWidth parameter of the parser class"""
         return self.maxwidth
     
     def setMaxWidth( self, maxwidth ):
-        """The maximum width you may specify here is 79. This
+        """setMaxWidth( maxwidth )
+        The maximum width you may specify here is 79. This
         will ensure it displays correctly even on a non-flowed program.
         Typically, column 80 is reserved for the line-wrap indicator"""
         if not isinstance( maxwidth, int ):
@@ -61,18 +67,22 @@ class parser:
         self.maxwidth = maxwidth
 
     def flow( self, text, debug=False ):
-        """This is the real workhorse function,
-        The parameter text contains the text to 
-        be flowed"""
+        """flow( text)
+        This is the real workhorse function,
+        text - contains the text to be flowed
+        Returns the text flowed as per RFC2646
+        """
         if not isinstance( text, str ):
             raise TypeError( "Parameter to flow must be of type string" )
         return self.wrap(self.unwrap(text, debug), debug)
-
-        
+    
     def matches(self, rule, text):
         """matches(rule, text)
         Will return True if this text meets the requirements of the specified
-        rule according to the rules from the 2646 ABNF"""
+        rule according to the rules from the 2646 ABNF
+        rule - Name of the rule from RFC2646 ABNF
+        text - fragment of text to test the rule against
+        Returns - True if the text matches"""
         if self.matchdict[rule].match(text):
             return True;
         return False;
@@ -103,6 +113,23 @@ class parser:
         for line in text.splitlines(True):
             output.append(self.bestMatch(line))
         return output
+
+    def prepNonQuotedText(self, text, debug=False ):
+        """prepNonQuotedText( text )
+        This will take a section of text that isnt quoted, and
+        space stuff any lines which should be to prevent munging.
+        text - contains the text to be operated on.
+        Returns - prepared text"""
+        output=[]
+        for line in text.splitlines(True):
+            #Space stuff lines beginning with a space
+            line = re.sub("^ ","  ", line)
+            #Space stuff lines beginning with a from
+            line = re.sub("^From"," From", line)
+            #space stuff lines begining with quote char
+            line = re.sub("^>"," >", line)
+            output.append(line)
+        return ''.join(output)
     
     def unwrap(self, text, debug=False):
         """unwrap(text)
@@ -154,8 +181,9 @@ class parser:
         return ''.join(output)
     
     def wrap( self, text, debug = False ):
-        """This function will wrap back up a text that has previously 
-           been unwrapped properly - using our current settings"""
+        """wrap( text )
+        This function will wrap back up a text that has previously 
+        been unwrapped properly - using our current settings"""
         output = []    
         #Match a possible newline
         for line in text.splitlines(True):

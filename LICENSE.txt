@@ -29,7 +29,7 @@ material in all forms that is accompanied by this license.
 2. Subject to the terms and conditions of this License Agreement, ORU
 hereby grants Licensee a nonexclusive, royalty-free, world-wide
 license to reproduce, analyze, test, perform and/or display publicly,
-prepare derivative works, distribute, and otherwise use it
+prepare derivative works, distribute, and otherwise use the software
 alone or in any derivative version, provided, however, that ORU's
 License Agreement and ORU's notice of copyright, i.e., "Copyright (c)
 2005 OrionRobots.co.uk; All Rights Reserved" are retained alone or in 
